@@ -27,7 +27,8 @@ public class Deck {
         if(numberOfCards > 52){
             throw new IllegalArgumentException("Number of cards to pick from a deck must be 52 or less.");
         }
-        //Todo: This method still needs to be implemented
-        return null;
+
+        cards.subList(0, numberOfCards).clear();
+        return new Card[numberOfCards];
     }
 }

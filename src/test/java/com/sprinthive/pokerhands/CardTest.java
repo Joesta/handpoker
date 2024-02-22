@@ -1,11 +1,17 @@
 package com.sprinthive.pokerhands;
 
+import com.sprinthive.pokerhands.handrank.BadPokerHandRanker;
+import com.sprinthive.pokerhands.handrank.HandRank;
+import com.sprinthive.pokerhands.handrank.HandRanker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CardTest {
 
@@ -103,5 +109,42 @@ public class CardTest {
                 hashCodes.add(hashCode);
             }
         }
+    }
+
+    @Test
+    public void testHighestCardRank() {
+        // create king of hearts
+        Card kingHearts = new Card(CardRank.KING, Suit.HEARTS);
+        // create queen of hearts
+        Card queenHearts = new Card(CardRank.QUEEN, Suit.HEARTS);
+        // create four of diamonds
+        Card four = new Card(CardRank.FOUR, Suit.DIAMONDS);
+        // create king of clubs
+        Card kingSpade = new Card(CardRank.ACE, Suit.CLUBS);
+        // create eight of spades
+        Card eight = new Card(CardRank.EIGHT, Suit.SPADES);
+
+        List<Card> cards = new ArrayList<>();
+        cards.add(kingHearts);
+        cards.add(queenHearts);
+        cards.add(four);
+        cards.add(eight);
+        cards.add(kingSpade);
+
+        assertNotNull(cards, "cards my not be empty or null");
+
+        HandRanker handRanker = new BadPokerHandRanker();
+        HandRank bestHandRank = handRanker.findBestHandRank(cards);
+
+        assertEquals(5, cards.size(), "expected five cards");
+        assertEquals(CardRank.ACE, cards.get(0).getRank(), bestHandRank.describeHand());
+
+        System.out.println(String.format("<<<< %s >>>>>", bestHandRank.describeHand()));
+
+        assertEquals(CardRank.KING, cards.get(1).getRank(), "king of hearts");
+        assertEquals(CardRank.QUEEN, cards.get(2).getRank(), "queen of hearts");
+        assertEquals(CardRank.EIGHT, cards.get(3).getRank(), "eight of spades");
+        assertEquals(CardRank.FOUR, cards.get(4).getRank(), "four of diamonds");
+
     }
 }
